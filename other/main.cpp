@@ -2,8 +2,8 @@
 #include <fstream>
 #include <vector>
 #include "../nlohmann/json.hpp"
-#include "future.hpp"
-#include "option.hpp"
+#include "future/future.hpp"
+#include "option/option.hpp"
 
 using json = nlohmann::json;
 
