@@ -1,5 +1,5 @@
 #pragma once
-#include "Instrument.hpp"
+#include "../Instrument.hpp"
 #include <iostream>
 
 class Future : public Instrument {

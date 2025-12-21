@@ -2,4 +2,4 @@ app*
 nlohmann/
 build/
 data*
-other
+other/data

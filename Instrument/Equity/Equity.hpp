@@ -1,10 +1,10 @@
 #pragma once
-#include "Instrument.hpp"
+#include "../Instrument.hpp"
 #include <iostream>
 
 class Equity : public Instrument {
 public:
-    explicit Equity(Exchange ex) : Instrument(ex) {}
+    explicit Equity(Exchange exchange) : Instrument(exchange) {}
 
     void log() const override {
         if (exchange == Exchange::NSE) std::cout << "NSE-EQUITY\n";
