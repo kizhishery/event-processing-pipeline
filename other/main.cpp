@@ -7,6 +7,7 @@
 #include "../nlohmann/json.hpp"
 #include "future/future.hpp"
 #include "option/option.hpp"
+#include "equity/equity.hpp"
 
 using json = nlohmann::json;
 
@@ -51,11 +52,12 @@ void run_job(const Job& job) {
 // ---------------------- Main --------------------------------
 int main() {
     try {
-        std::vector<Job> jobs = {
+        std::vector<Job> jobs {
             {"data/exchange_1_future.json",  "result/exchange_1_future.json",  &Future::processFutureExchangeOne},
             {"data/exchange_2_future.json",  "result/exchange_2_future.json",  &Future::processFutureExchangeTwo},
             {"data/exchange_1_option.json",  "result/exchange_1_option.json",  &Option::processOptionExchangeOne},
             {"data/exchange_2_option.json",  "result/exchange_2_option.json",  &Option::processOptionExchangeTwo},
+            {"data/exchange_1_equity.json",  "result/exchange_1_equity.json",  &Equity::processEquityExchangeOne},
         };
 
         std::vector<std::future<void>> futures;
@@ -68,9 +70,8 @@ int main() {
         }
 
         // Wait for all jobs and propagate exceptions
-        for (auto& f : futures) {
-            f.get();
-        }
+        for (auto& future : futures) 
+            future.get();
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << '\n';
