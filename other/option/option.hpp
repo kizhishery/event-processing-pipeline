@@ -2,7 +2,6 @@
 
 #include <string>
 #include <utility>
-#include <cmath>
 #include "../../nlohmann/json.hpp"
 
 using json = nlohmann::json;

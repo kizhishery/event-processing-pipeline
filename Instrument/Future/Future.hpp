@@ -1,14 +1,18 @@
 #pragma once
-#include "../Instrument.hpp"
+
 #include <iostream>
+#include "../Instrument.hpp"
+#include "../../nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 class Future : public Instrument {
 public:
     explicit Future(Exchange ex) : Instrument(ex) {}
 
-    void log() const override {
-        if (exchange == Exchange::EXCHANGE_1) std::cout << "EXCHANGE_1\n";
-        else if (exchange == Exchange::EXCHANGE_2) std::cout << "EXCHANGE_2\n";
-        else std::cout << "UNKNOWN\n";
-    }
+    void log() const override;
+
+    static json processFutureExchangeOne(const json& jsonData);
+    static json processFutureExchangeTwo(const json& jsonData);
 };
+

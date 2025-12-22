@@ -1,6 +1,4 @@
 #include "header.hpp"
-using json = nlohmann::json;
-
 // ---------------------- Job definition ----------------------
 struct Job {
     std::string file;        // input file
