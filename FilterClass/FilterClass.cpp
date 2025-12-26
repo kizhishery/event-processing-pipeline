@@ -1,9 +1,4 @@
 #include "FilterClass.hpp"
-#include "../ExchangeType/ExchangeType.hpp"
-#include "../Instrument/InstrumentFactory.hpp"
-#include "../nlohmann/json.hpp"
-
-using json = nlohmann::json;
 
 FilterClass::FilterClass(const std::string& jsonStr) {
     auto [exchange, type] = parseJson(jsonStr);

@@ -1,6 +1,7 @@
 app*
-nlohmann/
 build/
 data*
 other/data
 other/result
+
+external

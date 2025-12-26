@@ -1,6 +1,0 @@
-[submodule "external/nlohmann"]
-	path = external/nlohmann
-	url = https://github.com/nlohmann/json
-[submodule "external/cppcodec"]
-	path = external/cppcodec
-	url = https://github.com/tplgy/cppcodec

@@ -1,9 +1,14 @@
 #pragma once
+
 #include <string>
 #include <memory>
-#include "../Enums/Enums.hpp"
+#include <nlohmann/json.hpp>
 
-class Instrument;
+#include "../Enums/Enums.hpp"
+#include "../ExchangeType/ExchangeType.hpp"
+#include "../Instrument/InstrumentFactory.hpp"
+
+using json = nlohmann::json;
 
 class FilterClass {
 private:

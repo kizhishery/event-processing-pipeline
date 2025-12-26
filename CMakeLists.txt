@@ -14,3 +14,9 @@ add_executable(app
     instrument/future/future.cpp
     instrument/option/option.cpp
 )
+
+# ---- Vendored header-only libraries ----
+target_include_directories(app
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/external
+)
