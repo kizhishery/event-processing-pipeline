@@ -3,9 +3,9 @@
 #include <string>
 #include <utility>
 #include <iostream>
+#include <nlohmann/json.hpp>
 
 #include "../Instrument.hpp"
-#include "../../nlohmann/json.hpp"
 
 using json = nlohmann::json;
 
