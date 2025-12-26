@@ -3,8 +3,8 @@
 
 int main() {
     std::string jsonStr1 = R"({"exchange": "EXCHANGE_2", "type": "EQUITY", "data" : []})",
-                jsonStr2 = R"({"exchange": "EXCHANGE_2", "type": "EQUITY", "data" : []})",
-                jsonStr3 = R"({"exchange": "EXCHANGE_1", "type": "OPTION", "data" : []})";
+                jsonStr2 = R"({"exchange": "EXCHANGE_1", "type": "EQUITY", "data" : []})",
+                jsonStr3 = R"({"exchange": "EXCHANGE_2", "type": "OPTION", "data" : []})";
 
     FilterClass f1(jsonStr1), f2(jsonStr2), f3(jsonStr3);
 

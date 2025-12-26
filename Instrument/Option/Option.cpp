@@ -6,6 +6,19 @@ void Option::log() const {
     else std::cout << "UNKNOWN\n";
 }
 
+json Option::process(const json& jsonData) {
+    switch (exchange) {
+        case Exchange::EXCHANGE_1:
+            return processOptionExchangeOne(jsonData);
+
+        case Exchange::EXCHANGE_2:
+            return processOptionExchangeTwo(jsonData);
+
+        default:
+            return json{};
+    }
+}
+
 // ---------- ExchangeOne side ----------
 json Option::processExchangeOne(const json& side) {
     json j;
@@ -19,6 +32,7 @@ json Option::processExchangeOne(const json& side) {
     j["tsq"] = side.value("totalSellQuantity", 0);
     j["vol"] = side.value("totalTradedVolume", 0);
     j["iv"]  = std::round(side.value("impliedVolatility", 0.0) * 100.0) / 100.0;
+    
     return j;
 }
 

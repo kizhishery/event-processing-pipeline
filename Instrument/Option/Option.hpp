@@ -11,9 +11,11 @@ using json = nlohmann::json;
 
 class Option : public Instrument {
 public:
-    explicit Option(Exchange ex) : Instrument(ex) {}
+    explicit Option(Exchange exchange) : Instrument(exchange) {}
 
     void log() const override;
+
+    json process(const json& jsonData);
         // ---------- Side processors ----------
     static json processExchangeOne(const json& side);
     static json processExchangeTwo(const json& side, bool isCE);

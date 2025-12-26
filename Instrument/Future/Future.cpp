@@ -9,6 +9,20 @@ void Future::log() const {
         std::cout << "UNKNOWN\n";
 }
 
+json Future::process(const json& jsonData) {
+    switch (exchange) {
+        case Exchange::EXCHANGE_1:
+            return processFutureExchangeOne(jsonData);
+
+        case Exchange::EXCHANGE_2:
+            return processFutureExchangeTwo(jsonData);
+
+        default:
+            return json{};
+    }
+}
+
+
 json Future::processFutureExchangeOne(const json& jsonData) {
     json result;
 
