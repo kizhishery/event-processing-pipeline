@@ -15,7 +15,7 @@ public:
 
     void log() const override;
 
-    json process(const json& jsonData);
+    json process(const json& jsonData) override;
         // ---------- Side processors ----------
     static json processExchangeOne(const json& side);
     static json processExchangeTwo(const json& side, bool isCE);

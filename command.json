@@ -1,8 +1,0 @@
-{
-	"nlohamnn" : "curl -L -o external/nlohmann/json.hpp https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp",
-	"base64" : "curl -L -o external/base64/base64.h https://raw.githubusercontent.com/ReneNyffenegger/cpp-base64/master/base64.h",
-	"miniz.c" : "curl -L -o external/miniz/miniz.c https://raw.githubusercontent.com/richgel999/miniz/master/miniz.c",
-	"miniz.h" :"curl -L -o external/miniz/miniz.h https://raw.githubusercontent.com/richgel999/miniz/master/miniz.h"
-
-}
-

@@ -10,6 +10,7 @@ void Equity::log() const {
 }
 
 json Equity::process(const json& jsonData) {
+    
     switch (exchange) {
         case Exchange::EXCHANGE_1:
             return processEquityExchangeOne(jsonData);

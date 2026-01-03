@@ -26,13 +26,14 @@ add_executable(app
 target_include_directories(app
     PRIVATE
         ${CMAKE_SOURCE_DIR}
-        ${CMAKE_SOURCE_DIR}/external   # <-- cppcodec lives here
+        ${CMAKE_SOURCE_DIR}/external   # cppcodec
 )
 
 # --------------------
 # Dependencies
 # --------------------
 find_package(ZLIB REQUIRED)
+find_package(Boost REQUIRED COMPONENTS iostreams)
 find_package(nlohmann_json CONFIG REQUIRED)
 
 # --------------------
@@ -41,7 +42,11 @@ find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(app
     PRIVATE
         ZLIB::ZLIB
+        Boost::iostreams
         nlohmann_json::nlohmann_json
 )
 
+# --------------------
+# Compile definitions
+# --------------------
 target_compile_definitions(app PRIVATE HAVE_ZLIB)

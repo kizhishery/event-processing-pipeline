@@ -9,7 +9,7 @@ std::pair<Exchange, Type> FilterClass::parseJson(const std::string& jsonStr) {
     try {
         json Json = json::parse(jsonStr);
 
-        const std::string exchange = Json.value("exchange",""), value = Json.value("type","");
+        const std::string exchange = Json.value("EXCHANGE",""), value = Json.value("TYPE","");
         return {
             ExchangeType::toExchange(exchange),
             ExchangeType::toType(value)

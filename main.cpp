@@ -1,87 +1,69 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <string>
+#include <stdexcept>
+#include <memory>
 
-#include <zlib.h>
 #include <nlohmann/json.hpp>
-#include <cppcodec/base64_rfc4648.hpp>
-
 #include "FilterClass/FilterClass.hpp"
+#include "Instrument/Instrument.hpp" // Ensure this is included
 
-/* ---------------- gzip decompress ---------------- */
-std::string gzipDecompress(const std::vector<uint8_t>& input) {
-    z_stream zs{};
-    zs.next_in = const_cast<Bytef*>(input.data());
-    zs.avail_in = input.size();
+using json = nlohmann::json;
 
-    if (inflateInit2(&zs, 16 + MAX_WBITS) != Z_OK)
-        throw std::runtime_error("inflateInit2 failed");
-
-    std::string output;
-    char buffer[32768];
-
-    int ret;
-    do {
-        zs.next_out = reinterpret_cast<Bytef*>(buffer);
-        zs.avail_out = sizeof(buffer);
-
-        ret = inflate(&zs, 0);
-
-        if (output.size() < zs.total_out)
-            output.append(buffer, zs.total_out - output.size());
-
-    } while (ret == Z_OK);
-
-    inflateEnd(&zs);
-
-    if (ret != Z_STREAM_END)
-        throw std::runtime_error("gzip decompression failed");
-
-    return output;
-}
-
-/* ---------------- main ---------------- */
-int main() {
-    try {
-        /* 1️⃣ Read data.json */
+int main()
+{
+    try
+    {
         std::ifstream in("../data.json");
         if (!in)
-            throw std::runtime_error("Failed to open data.json");
+        {
+            throw std::runtime_error("Failed to open ../data.json");
+        }
 
-        nlohmann::json arr;
+        json arr;
         in >> arr;
 
-        for (const auto& msg : arr) {
-            try {
-                /* 2️⃣ Extract BASE64 STRING */
-                std::string b64 = msg.get<std::string>();
+        if (!arr.is_array())
+        {
+            throw std::runtime_error("Expected JSON array at root");
+        }
 
-                /* 3️⃣ Base64 decode */
-                std::vector<uint8_t> compressed = cppcodec::base64_rfc4648::decode<std::vector<uint8_t>>(b64);
-                
+        for (const auto &msg : arr)
+        {
+            try
+            {
+                if (!msg.is_object())
+                    continue;
 
-                /* 4️⃣ GZIP decompress */
-                std::string decompressed = gzipDecompress(compressed);
+                // 1. Pass the whole object to the Filter (let Filter handle the string conversion if it must)
+                std::string input = msg.dump();
+                // filter require string unput instead of json object
+                FilterClass filter(input);
 
-                /* 🔍 DEBUG (do not skip this once) */
-                std::cout << decompressed << "\n";
+                std::unique_ptr<Instrument> instrument = filter.getInstrument();
 
-                /* 5️⃣ Parse JSON */
-                nlohmann::json j = nlohmann::json::parse(decompressed);
-
-                /* 6️⃣ Your pipeline */
-                FilterClass f(decompressed);
-                auto instrument = f.getInstrument();
                 if (instrument)
+                {
                     instrument->log();
+
+                    // 4. Pass this OBJECT to process.
+                    // DO NOT use .dump() here if process() expects a json object.
+                    json val = instrument->process(msg);
+                    std::cout << "Processed Output: " << val.dump(4) << '\n';
+                    
+                }
             }
-            catch (const std::exception& e) {
-                std::cerr << "Message error: " << e.what() << '\n';
+            catch (const std::exception &e)
+            {
+                std::cerr << "Message-level error: " << e.what() << '\n';
             }
         }
     }
-    catch (const std::exception& e) {
-        std::cerr << "Fatal error: " << e.what() << '\n';
+    catch (const std::exception &e)
+    {
+        std::cerr << "Fatal system error: " << e.what() << '\n';
+        return 1;
     }
+
+    return 0;
 }

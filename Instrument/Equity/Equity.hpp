@@ -13,7 +13,7 @@ public:
     explicit Equity(Exchange exchange) : Instrument(exchange) {}
     
     void log() const override;
-    json process(const json& jsonData);
+    json process(const json& jsonData) override;
     
     static json processEquityExchangeOne(const json& jsonData);
     static json processEquityExchangeTwo(const json& jsonData);

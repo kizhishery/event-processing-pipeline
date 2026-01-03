@@ -3,8 +3,8 @@
 #include <cctype>
 
 Exchange ExchangeType::toExchange(const std::string& str) {
-    if (str == "EXCHANGE_1") return Exchange::EXCHANGE_1;
-    if (str == "EXCHANGE_2") return Exchange::EXCHANGE_2;
+    if (str == "NSE") return Exchange::EXCHANGE_1;
+    if (str == "BSE") return Exchange::EXCHANGE_2;
     return Exchange::UNKNOWN;
 }
 

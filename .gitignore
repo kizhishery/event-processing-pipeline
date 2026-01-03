@@ -5,3 +5,4 @@ other/data
 other/result
 
 .vscode
+*.json

@@ -25,7 +25,7 @@ json Future::process(const json& jsonData) {
 
 json Future::processFutureExchangeOne(const json& jsonData) {
     json result;
-
+    
     const std::string timeStr = jsonData.value("time", "");
 
     if (!jsonData.contains("data") || jsonData["data"].empty())
@@ -59,7 +59,7 @@ json Future::processFutureExchangeTwo(const json& jsonData) {
     if (!jsonData.contains("data") || jsonData["data"].empty())
         return result;
 
-    for (const auto& val : jsonData["data"]) {
+    for (const auto& val : jsonData["data"][0]) {
         const std::string ul =
             val.value("SERIES_CODE", "").substr(0, 6);
 
