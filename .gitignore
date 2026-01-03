@@ -1,8 +1,7 @@
 app*
 build/
 data*
-other/data
-other/result
+other/
 
 .vscode
 *.json
