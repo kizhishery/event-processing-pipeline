@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(app LANGUAGES CXX)
+project(main LANGUAGES CXX)
 
 # --------------------
 # C++ standard
@@ -11,7 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # --------------------
 # Executable
 # --------------------
-add_executable(app
+add_executable(main
     main.cpp
     filterclass/filterclass.cpp
     exchangetype/exchangetype.cpp
@@ -23,7 +23,7 @@ add_executable(app
 # --------------------
 # Include paths
 # --------------------
-target_include_directories(app
+target_include_directories(main
     PRIVATE
         ${CMAKE_SOURCE_DIR}
         ${CMAKE_SOURCE_DIR}/external   # cppcodec
@@ -33,20 +33,20 @@ target_include_directories(app
 # Dependencies
 # --------------------
 find_package(ZLIB REQUIRED)
-find_package(Boost REQUIRED COMPONENTS iostreams)
 find_package(nlohmann_json CONFIG REQUIRED)
+# find_package(Boost REQUIRED COMPONENTS iostreams)
 
 # --------------------
 # Link libraries
 # --------------------
-target_link_libraries(app
+target_link_libraries(main
     PRIVATE
         ZLIB::ZLIB
-        Boost::iostreams
+        # Boost::iostreams
         nlohmann_json::nlohmann_json
 )
 
 # --------------------
 # Compile definitions
 # --------------------
-target_compile_definitions(app PRIVATE HAVE_ZLIB)
+target_compile_definitions(main PRIVATE HAVE_ZLIB)

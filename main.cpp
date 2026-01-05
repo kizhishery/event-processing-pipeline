@@ -10,28 +10,23 @@
 
 using json = nlohmann::json;
 
-int main()
-{
-    try
-    {
+int main() {
+    try {
         std::ifstream in("../data.json");
-        if (!in)
-        {
+        if (!in) {
             throw std::runtime_error("Failed to open ../data.json");
         }
+
 
         json arr;
         in >> arr;
 
-        if (!arr.is_array())
-        {
+        if (!arr.is_array()) {
             throw std::runtime_error("Expected JSON array at root");
         }
 
-        for (const auto &msg : arr)
-        {
-            try
-            {
+        for (const auto &msg : arr) {
+            try {
                 if (!msg.is_object())
                     continue;
 
@@ -42,25 +37,21 @@ int main()
 
                 std::unique_ptr<Instrument> instrument = filter.getInstrument();
 
-                if (instrument)
-                {
+                if (instrument) {
                     instrument->log();
 
                     // 4. Pass this OBJECT to process.
                     // DO NOT use .dump() here if process() expects a json object.
                     json val = instrument->process(msg);
                     std::cout << "Processed Output: " << val.dump(4) << '\n';
-                    
                 }
             }
-            catch (const std::exception &e)
-            {
+            catch (const std::exception &e) {
                 std::cerr << "Message-level error: " << e.what() << '\n';
             }
         }
     }
-    catch (const std::exception &e)
-    {
+    catch (const std::exception &e) {
         std::cerr << "Fatal system error: " << e.what() << '\n';
         return 1;
     }
