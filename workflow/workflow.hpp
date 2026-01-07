@@ -5,7 +5,14 @@
 using json = nlohmann::json;
 
 /**
- * Safety wrapper around process().
- * Prevents one bad record from killing the batch.
+ * Workflow
+ * ----------
+ * Handles orchestration and error isolation for one record.
  */
-void workflow(const json& record);
+class Workflow {
+public:
+    Workflow() = default;
+
+    // Execute workflow for a single record
+    void execute(const json& record) const;
+};

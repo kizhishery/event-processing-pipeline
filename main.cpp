@@ -8,8 +8,7 @@
 
 using json = nlohmann::json;
 
-int main()
-{
+int main() {
     try {
         std::ifstream in("../data.json");
         if (!in)
@@ -21,8 +20,10 @@ int main()
         if (!root.is_array())
             throw std::runtime_error("Expected array of records");
 
+        Workflow workflow;
+
         for (const auto& record : root) {
-            workflow(record);
+            workflow.execute(record);
         }
     }
     catch (const std::exception& e) {

@@ -4,7 +4,7 @@
 
 #include "process/process.hpp"
 
-void workflow(const json& record)
+void Workflow::execute(const json& record) const
 {
     try {
         process(record);
