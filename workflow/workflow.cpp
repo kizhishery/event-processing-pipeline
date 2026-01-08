@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "workflow.hpp"
-#include "post/post.hpp"
 #include "process/process.hpp"
+#include "postJson/postJson.hpp"
 
 void Workflow::execute(const json& record) const
 {

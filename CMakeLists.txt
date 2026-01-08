@@ -7,15 +7,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(main
     main.cpp
+    utils/gzip_json.cpp
     process/process.cpp
+    postJson/postJson.cpp
     workflow/workflow.cpp
     filterclass/filterclass.cpp
-    exchangetype/exchangetype.cpp
     instrument/equity/equity.cpp
     instrument/future/future.cpp
     instrument/option/option.cpp
-    utils/gzip_json.cpp
-    post/post.cpp
+    exchangetype/exchangetype.cpp
 )
 
 target_include_directories(main
@@ -24,14 +24,14 @@ target_include_directories(main
 )
 
 find_package(ZLIB REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
 find_package(CURL REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 target_link_libraries(main
     PRIVATE
         ZLIB::ZLIB
-        nlohmann_json::nlohmann_json
         CURL::libcurl
+        nlohmann_json::nlohmann_json
 )
 
 target_compile_definitions(main PRIVATE HAVE_ZLIB)
