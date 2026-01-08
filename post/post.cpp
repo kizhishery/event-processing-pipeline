@@ -9,24 +9,22 @@
 
 using json = nlohmann::json;
 
-// Load env safely (lazy, once)
-static std::string getUrl() {
-    const char* v = std::getenv("URL");
-    if (!v || !*v)
+static std::pair<std::string, std::string> getEnv() {
+    const char* url = std::getenv("URL");
+    if (!url || !*url)
         throw std::runtime_error("URL env var not set");
-    return std::string(v);
-}
 
-
-static std::string getAnonKey() {
-    const char* v = std::getenv("KEY");
-    if (!v || !*v)
+    const char* key = std::getenv("KEY");
+    if (!key || !*key)
         throw std::runtime_error("KEY env var not set");
-    return std::string(v);
+
+    return { std::string(url), std::string(key) };
 }
 
 
 void postJson(const json& payload) {
+    auto [URL, KEY] = getEnv();
+
     CURL* curl = curl_easy_init();
     if (!curl)
         throw std::runtime_error("Failed to init curl");
@@ -34,13 +32,12 @@ void postJson(const json& payload) {
     std::string body = payload.dump();
 
     struct curl_slist* headers = nullptr;
-    std::string authHeader =
-        "Authorization: Bearer " + getAnonKey();
+    std::string authHeader = "Authorization: Bearer " + KEY;
 
     headers = curl_slist_append(headers, "Content-Type: application/json");
     headers = curl_slist_append(headers, authHeader.c_str());
 
-    curl_easy_setopt(curl, CURLOPT_URL, getUrl().c_str());
+    curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_POST, 1L);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
