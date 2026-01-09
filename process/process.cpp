@@ -69,7 +69,7 @@ json process(const json& record){
         if (!instrument)
             return json::object();
 
-        instrument->log();
+        // instrument->log();
 
         // ----------------------------
         // 7. Final processed output
