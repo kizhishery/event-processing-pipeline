@@ -1,6 +1,6 @@
 app*
 build/
-data*
+data*.json
 other/
 test/
 
