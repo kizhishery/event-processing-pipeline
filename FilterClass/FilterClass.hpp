@@ -16,10 +16,10 @@ private:
     Exchange exchangeEnum = Exchange::UNKNOWN;
 
     // 🔥 entire try-catch lives here
-    static std::pair<Exchange, Type> parseJson(const std::string& jsonStr);
+    static std::pair<Exchange, Type> parseJson(const json& jsonStr);
 
 public:
-    explicit FilterClass(const std::string& jsonStr);
+    explicit FilterClass(const json& Json);
 
     bool match(Exchange exchange, Type type) const;
     std::unique_ptr<Instrument> getInstrument() const;

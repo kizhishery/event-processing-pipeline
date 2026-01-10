@@ -30,10 +30,10 @@ void postJson(const json& payload) {
     if (!curl)
         throw std::runtime_error("Failed to init curl");
 
-    std::string body = payload.dump();
-    std::cout<<"body"<<body<<'\n';
-
+        
     struct curl_slist* headers = nullptr;
+    
+    std::string body = payload.dump();
     std::string authHeader = "Authorization: Bearer " + KEY;
 
     headers = curl_slist_append(headers, "Content-Type: application/json");

@@ -1,14 +1,5 @@
 #include "future.hpp"
 
-void Future::log() const {
-    if (exchange == Exchange::EXCHANGE_1)
-        std::cout << "EXCHANGE_1 FUTURE\n";
-    else if (exchange == Exchange::EXCHANGE_2)
-        std::cout << "EXCHANGE_2 FUTURE\n";
-    else
-        std::cout << "UNKNOWN\n";
-}
-
 json Future::process(const json& jsonData) {
     switch (exchange) {
         case Exchange::EXCHANGE_1:

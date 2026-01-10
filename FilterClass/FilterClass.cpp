@@ -1,13 +1,13 @@
 #include "FilterClass.hpp"
 
-FilterClass::FilterClass(const std::string& jsonStr) {
-    auto [exchange, type] = parseJson(jsonStr);
+FilterClass::FilterClass(const json& Json) {
+    auto [exchange, type] = parseJson(Json);
     exchangeEnum = exchange, typeEnum = type;
 }
 
-std::pair<Exchange, Type> FilterClass::parseJson(const std::string& jsonStr) {
+std::pair<Exchange, Type> FilterClass::parseJson(const json& Json) {
     try {
-        json Json = json::parse(jsonStr);
+        // json Json = json::parse(jsonStr);
 
         const std::string exchange = Json.value("EXCHANGE",""), value = Json.value("TYPE","");
         return {

@@ -1,8 +1,7 @@
-#include <iostream>
-
 #include "workflow.hpp"
-#include "process/process.hpp"
-#include "postJson/postJson.hpp"
+
+#define logJson(json) std::cout<<"json\n"<<data.dump(4)<<'\n'
+
 
 void Workflow::execute(const json& record) const
 {

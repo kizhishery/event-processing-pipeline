@@ -1,6 +1,10 @@
 #pragma once
 
+#include <iostream>
 #include <nlohmann/json.hpp>
+
+#include "process/process.hpp"
+#include "postJson/postJson.hpp"
 
 using json = nlohmann::json;
 

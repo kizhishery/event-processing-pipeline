@@ -1,16 +1,5 @@
 #include "process.hpp"
 
-#include <memory>
-#include <vector>
-#include <iostream>
-
-#include <nlohmann/json.hpp>
-
-#include "utils/gzip_json.hpp"
-#include "instrument/instrument.hpp"
-#include "filterclass/filterclass.hpp"
-
-using json = nlohmann::json;
 
 json process(const json& record){
     try {
@@ -23,25 +12,22 @@ json process(const json& record){
             return json::object();
         }
         
-        json snsBody = json::parse(record["body"].get<std::string>());
+        json sqsBody = json::parse(record["body"].get<std::string>());
         
         // ----------------------------
         // 2. SNS Message (STRING)
         // ----------------------------
-        if (!snsBody.contains("Message") || !snsBody["Message"].is_string()) {
+        if (!sqsBody.contains("Message") || !sqsBody["Message"].is_string()) {
             std::cout<<"record missing Message parameter"<<'\n';
             return json::object();
         }
         
-        json messageObj = json::parse(snsBody["Message"].get<std::string>());
-        std::cout<<"messageObj"<<messageObj.dump()<<'\n';
+        json messageObj = json::parse(sqsBody["Message"].get<std::string>());
         // ----------------------------
         // 3. Validate Buffer payload
         // ----------------------------
-        if (!messageObj.contains("type") ||
-        messageObj["type"] != "Buffer" ||
-        !messageObj.contains("data") ||
-        !messageObj["data"].is_array()){
+        if (!messageObj.contains("type") || messageObj["type"] != "Buffer" ||
+        !messageObj.contains("data") || !messageObj["data"].is_array()){
             std::cout<<"record missing type | data"<<'\n';
             return json::object();
         }
@@ -62,16 +48,13 @@ json process(const json& record){
         // ----------------------------
         // 6. Filter → Instrument
         // ----------------------------
-        FilterClass filter(decompressedJSON.dump());
+        FilterClass filter(decompressedJSON);
         std::unique_ptr<Instrument> instrument = filter.getInstrument();
 
         if (!instrument) {
             std::cout<<"Unable to find instrument"<<'\n';
             return json::object();
         }
-
-        // instrument->log();
-
         // ----------------------------
         // 7. Final processed output
         // ----------------------------

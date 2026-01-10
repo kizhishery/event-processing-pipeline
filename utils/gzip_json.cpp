@@ -1,12 +1,5 @@
 #include "gzip_json.hpp"
 
-#include <sstream>
-#include <stdexcept>
-#include <zlib.h>
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
-
 json readGzippedJson(const std::vector<unsigned char>& data) {
     constexpr size_t CHUNK = 16384;
 

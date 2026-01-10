@@ -1,14 +1,5 @@
 #include "equity.hpp"
 
-void Equity::log() const {
-    if (exchange == Exchange::EXCHANGE_1)
-        std::cout << "EXCHANGE_1 EQUITY\n";
-    else if (exchange == Exchange::EXCHANGE_2)
-        std::cout << "EXCHANGE_2 EQUITY\n";
-    else
-        std::cout << "UNKNOWN\n";
-}
-
 json Equity::process(const json& jsonData) {
     
     switch (exchange) {

@@ -1,11 +1,5 @@
 #include "option.hpp"
 
-void Option::log() const {
-    if (exchange == Exchange::EXCHANGE_1) std::cout << "EXCHANGE_1 "<<"OPTION"<<'\n';
-    else if (exchange == Exchange::EXCHANGE_2) std::cout << "EXCHANGE_2 "<<"OPTION"<<'\n';
-    else std::cout << "UNKNOWN\n";
-}
-
 json Option::process(const json& jsonData) {
     switch (exchange) {
         case Exchange::EXCHANGE_1:

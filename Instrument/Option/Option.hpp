@@ -11,9 +11,7 @@ using json = nlohmann::json;
 
 class Option : public Instrument {
 public:
-    explicit Option(Exchange exchange) : Instrument(exchange) {}
-
-    void log() const override;
+    explicit Option(Exchange exchange) : Instrument(exchange) {};
 
     json process(const json& jsonData) override;
         // ---------- Side processors ----------

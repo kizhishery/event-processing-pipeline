@@ -41,9 +41,9 @@ int main() {
         }
 
         // Wait for all tasks + catch async exceptions
-        for (auto& f : futures) {
+        for (auto& future : futures) {
             try {
-                f.get();
+                future.get();
             }
             catch (const std::exception& e) {
                 std::cerr << "Async task failed: " << e.what() << "\n";
