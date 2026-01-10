@@ -7,6 +7,7 @@
 
 #include "macro/logger.hpp"
 #include "../Instrument.hpp"
+#include "namespace/option.hpp"
 
 using json = nlohmann::json;
 

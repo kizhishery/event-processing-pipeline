@@ -15,38 +15,39 @@ json Option::process(const json& jsonData) {
 
 // ---------- ExchangeOne side ----------
 json Option::processExchangeOne(const json& side) {
-    json j;
-    j["ltp"] = side.value("lastPrice", 0.0);
-    j["bp"]  = side.value("buyPrice1", 0.0);
-    j["sp"]  = side.value("sellPrice1", 0.0);
-    j["oi"]  = side.value("openInterest", 0);
-    j["bq"]  = side.value("buyQuantity1", 0);
-    j["sq"]  = side.value("sellQuantity1", 0);
-    j["tbq"] = side.value("totalBuyQuantity", 0);
-    j["tsq"] = side.value("totalSellQuantity", 0);
-    j["vol"] = side.value("totalTradedVolume", 0);
-    j["iv"]  = std::round(side.value("impliedVolatility", 0.0) * 100.0) / 100.0;
+    json Json;
+
+    Json[OPTION::VOLUME]                = side.value("totalTradedVolume", 0);
+    Json[OPTION::BUY_PRICE]             = side.value("buyPrice1", 0.0);
+    Json[OPTION::SELL_PRICE]            = side.value("sellPrice1", 0.0);
+    Json[OPTION::BUY_QUANTITY]          = side.value("buyQuantity1", 0);
+    Json[OPTION::SELL_QUANTITY]         = side.value("sellQuantity1", 0);
+    Json[OPTION::OPEN_INTEREST]         = side.value("openInterest", 0);
+    Json[OPTION::LAST_TRADED_PRICE]     = side.value("lastPrice", 0.0);
+    Json[OPTION::IMPLIED_VOLATILITY]    = std::round(side.value("impliedVolatility", 0.0) * 100.0) / 100.0;
+    Json[OPTION::TOTAL_BUY_QUANTITY]    = side.value("totalBuyQuantity", 0);
+    Json[OPTION::TOTAL_SELL_QUANTITY]   = side.value("totalSellQuantity", 0);
     
-    return j;
+    return Json;
 }
 
 // ---------- ExchangeTwo side ----------
 json Option::processExchangeTwo(const json& side, bool isCE) {
-    json j;
+    json Json;
     const std::string p = isCE ? "C_" : "";
 
-    j["ltp"] = toDouble(side, (p + "Last_Trd_Price").c_str());
-    j["bp"]  = toDouble(side, (p + "BidPrice").c_str());
-    j["sp"]  = toDouble(side, (p + "OfferPrice").c_str());
-    j["oi"]  = toInt   (side, (p + "Open_Interest").c_str());
-    j["bq"]  = toInt   (side, (p + "BIdQty").c_str());
-    j["sq"]  = toInt   (side, (p + "OfferQty").c_str());
-    j["tbq"] = toInt   (side, (p + "BIdQty").c_str());
-    j["tsq"] = toInt   (side, (p + "OfferQty").c_str());
-    j["vol"] = toInt   (side, (p + "Vol_Traded").c_str());
-    j["iv"]  = std::round(toDouble(side, (p + "IV").c_str()) * 100.0) / 100.0;
-
-    return j;
+    Json[OPTION::VOLUME]                = toInt   (side, (p + "Vol_Traded").c_str());
+    Json[OPTION::BUY_PRICE]             = toDouble(side, (p + "BidPrice").c_str());
+    Json[OPTION::SELL_PRICE]            = toDouble(side, (p + "OfferPrice").c_str());
+    Json[OPTION::BUY_QUANTITY]          = toInt   (side, (p + "BIdQty").c_str());
+    Json[OPTION::SELL_QUANTITY]         = toInt   (side, (p + "OfferQty").c_str());
+    Json[OPTION::OPEN_INTEREST]         = toInt   (side, (p + "Open_Interest").c_str());
+    Json[OPTION::LAST_TRADED_PRICE]     = toDouble(side, (p + "Last_Trd_Price").c_str());
+    Json[OPTION::IMPLIED_VOLATILITY]    = std::round(toDouble(side, (p + "IV").c_str()) * 100.0) / 100.0;
+    Json[OPTION::TOTAL_BUY_QUANTITY]    = toInt   (side, (p + "BIdQty").c_str());
+    Json[OPTION::TOTAL_SELL_QUANTITY]   = toInt   (side, (p + "OfferQty").c_str());
+    
+    return Json;
 }
 
 // ---------- Common option builder ----------
@@ -60,16 +61,19 @@ json Option::buildOption(
     const json& pe
 ) {
     json option;
-    option["ts"]  = timestamp;
-    option["ul"]  = underlying;
-    option["ulv"] = underlyingValue;
-    option["exp"] = expiry;
-    option["str"] = strike;
-    option["key"] = std::to_string(strike) + " | " + expiry;
-    option["ce"]  = ce;
-    option["pe"]  = pe;
+    
+    option[OPTION::CE]  = ce;
+    option[OPTION::PE]  = pe;
+    option[OPTION::KEY] = std::to_string(strike) + " | " + expiry;
+    option[OPTION::EXPIRY] = expiry;
+    option[OPTION::TIMESTAMP]  = timestamp;
+    option[OPTION::UNDERLYING]  = underlying;
+    option[OPTION::STRIKE_PRICE] = strike;
+    option[OPTION::UNDERLYING_VALUE] = underlyingValue;
+
     return option;
 }
+
 
 // ---------- Strike bounds ----------
 std::pair<int, int> Option::calculateBound(double underlyingValue, int multiplier, int count) {
