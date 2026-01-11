@@ -3,62 +3,48 @@
 
 json process(const json& record){
     try {
-        // std::cout<<record.dump()<<'\n';
-        // ----------------------------
-        // 1. SQS body (STRING)
-        // ----------------------------
+        // LOG_JSON(record,4);
+        // SQS body
         if (!record.contains("body") || !record["body"].is_string()) {
-            LOG_ERR("record missing body parameter");
+            RUNTIME_ERROR("record missing body parameter");
             return json::object();
         }
         
         json sqsBody = json::parse(record["body"].get<std::string>());
         
-        // ----------------------------
-        // 2. SNS Message (STRING)
-        // ----------------------------
+        // SNS Message 
         if (!sqsBody.contains("Message") || !sqsBody["Message"].is_string()) {
-            LOG_ERR("record missing Message parameter");
+            RUNTIME_ERROR("record missing Message parameter");
             return json::object();
         }
         
-        json messageObj = json::parse(sqsBody["Message"].get<std::string>());
-        // ----------------------------
-        // 3. Validate Buffer payload
-        // ----------------------------
-        if (!messageObj.contains("type") || messageObj["type"] != "Buffer" ||
-        !messageObj.contains("data") || !messageObj["data"].is_array()){
-            LOG_ERR("record missing type | data");
+        json messages = json::parse(sqsBody["Message"].get<std::string>());
+        // Validate Buffer payload
+        if (!messages.contains("type") || messages["type"] != "Buffer" || !messages.contains("data") || !messages["data"].is_array()){
+            RUNTIME_ERROR("record missing type | data");
             return json::object();
         }
 
-        // ----------------------------
-        // 4. Extract gzip buffer
-        // ----------------------------
+        // Extract gzip buffer
         std::vector<unsigned char> zipArray;
-        zipArray.reserve(messageObj["data"].size());
+        zipArray.reserve(messages["data"].size());
 
-        for (const auto& b : messageObj["data"])
-            zipArray.push_back(b.get<unsigned char>());
+        for (const auto& message : messages["data"])
+            zipArray.push_back(message.get<unsigned char>());
 
-        // ----------------------------
-        // 5. Decompress gzip → JSON
-        // ----------------------------
+        // Decompress gzip → JSON
         json decompressedJSON = readGzippedJson(zipArray);
-        // ----------------------------
-        // 6. Filter → Instrument
-        // ----------------------------
+
+        // Filter → Instrument
         FilterClass filter(decompressedJSON);
         std::unique_ptr<Instrument> instrument = filter.getInstrument();
 
         if (!instrument) {
-            LOG_ERR("Unable to find instrument");
+            RUNTIME_ERROR("Unable to find instrument");
             return json::object();
         }
-        // ----------------------------
-        // 7. Final processed output
-        // ----------------------------
-        return instrument->process(decompressedJSON);
+        // Final processed output
+        return instrument -> process(decompressedJSON);
     }
     catch (const std::exception& e) {
         LOG_ERR(e.what());

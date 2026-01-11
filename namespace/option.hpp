@@ -1,3 +1,4 @@
+#pragma once
 namespace OPTION {
 	static constexpr const char* CE = "ce";
     static constexpr const char* PE = "pe";

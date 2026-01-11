@@ -7,9 +7,8 @@ json readGzippedJson(const std::vector<unsigned char>& data) {
     strm.next_in  = const_cast<Bytef*>(data.data());
     strm.avail_in = static_cast<uInt>(data.size());
 
-    if (inflateInit2(&strm, 15 + 32) != Z_OK) {
-        throw std::runtime_error("inflateInit2 failed");
-    }
+    if (inflateInit2(&strm, 15 + 32) != Z_OK) 
+        RUNTIME_ERROR("inflateInit2 failed");
 
     unsigned char out[CHUNK];
     std::ostringstream decompressed;
@@ -21,17 +20,12 @@ json readGzippedJson(const std::vector<unsigned char>& data) {
 
         ret = inflate(&strm, Z_NO_FLUSH);
 
-        if (ret == Z_STREAM_ERROR ||
-            ret == Z_DATA_ERROR ||
-            ret == Z_MEM_ERROR) {
+        if (ret == Z_STREAM_ERROR || ret == Z_DATA_ERROR || ret == Z_MEM_ERROR) {
             inflateEnd(&strm);
-            throw std::runtime_error("gzip decompression failed");
+            RUNTIME_ERROR("gzip decompression failed");
         }
 
-        decompressed.write(
-            reinterpret_cast<char*>(out),
-            CHUNK - strm.avail_out
-        );
+        decompressed.write(reinterpret_cast<char*>(out),CHUNK - strm.avail_out);
 
     } while (ret != Z_STREAM_END);
 

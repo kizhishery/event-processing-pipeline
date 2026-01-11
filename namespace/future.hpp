@@ -1,3 +1,5 @@
+#pragma once
+
 namespace FUTURE {
     static constexpr const char* KEY                = "key";
     static constexpr const char* VOLUME             = "vol";

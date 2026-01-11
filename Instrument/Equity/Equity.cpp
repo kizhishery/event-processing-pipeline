@@ -20,7 +20,7 @@ json Equity::processEquityExchangeOne(const json& jsonData) {
     const std::string timeStr = jsonData.value("time", "");
 
     if (!jsonData.contains("data") || jsonData["data"].empty()) {
-        LOG_ERR("data val is missing");
+        RUNTIME_ERROR("data val is missing");
         return result;
     }
     
@@ -50,7 +50,7 @@ json Equity::processEquityExchangeTwo(const json& jsonData) {
     const std::string timeStr = jsonData.value("time", "");
     
     if (!jsonData.contains("data") || jsonData["data"].empty()) {
-        LOG_ERR("data val is missing");
+        RUNTIME_ERROR("data val is missing");
         return result;
     }
 

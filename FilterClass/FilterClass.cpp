@@ -2,22 +2,21 @@
 
 FilterClass::FilterClass(const json& Json) {
     auto [exchange, type] = parseJson(Json);
+
     exchangeEnum = exchange, typeEnum = type;
 }
 
-std::pair<Exchange, Type> FilterClass::parseJson(const json& Json) {
+Pair FilterClass::parseJson(const json& Json) {
     try {
-        // json Json = json::parse(jsonStr);
+        const std::string type = Json.value("TYPE", "");
+        const std::string exchange = Json.value("EXCHANGE", "");
 
-        const std::string exchange = Json.value("EXCHANGE",""), value = Json.value("TYPE","");
-        return {
-            ExchangeType::toExchange(exchange),
-            ExchangeType::toType(value)
-        };
+        return Pair(exchange, type);
     }
-    catch (...) {
-        LOG_ERR("EXHANGE and TYPE didn't match");
-        return { Exchange::UNKNOWN, Type::UNKNOWN };
+    catch (const std::runtime_error& err) {
+        LOG_ERR(err.what());
+        // Uses default constructor
+        return Pair(); 
     }
 }
 

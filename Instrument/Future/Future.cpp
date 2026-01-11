@@ -20,7 +20,7 @@ json Future::processFutureExchangeOne(const json& jsonData) {
     const std::string timeStr = jsonData.value("time", "");
 
     if (!jsonData.contains("data") || jsonData["data"].empty()) {
-        LOG_ERR("data val arg is missing");
+        RUNTIME_ERROR("data val arg is missing");
         return result;
     }
     
@@ -50,7 +50,7 @@ json Future::processFutureExchangeTwo(const json& jsonData) {
     const std::string timeStr = jsonData.value("time", "");
     
     if (!jsonData.contains("data") || jsonData["data"].empty()) {
-        LOG_ERR("data val arg is missing");
+        RUNTIME_ERROR("data val arg is missing");
         return result;
     }
     

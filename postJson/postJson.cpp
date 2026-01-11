@@ -1,13 +1,13 @@
 #include "postJson.hpp"
 
 static std::pair<std::string, std::string> getEnv() {
-    const char* url = std::getenv("URL");
-    if (!url || !*url)
-        throw std::runtime_error("URL env var not set");
+    const char* url = DATA::URL, *key = DATA::KEY;
 
-    const char* key = std::getenv("KEY");
-    if (!key || !*key)
-        throw std::runtime_error("KEY env var not set");
+    if (!url)
+        RUNTIME_ERROR("URL env var not set");
+
+    if (!key)
+        RUNTIME_ERROR("KEY env var not set");
 
     return std::make_pair(std::string(url), std::string(key));
 }
@@ -18,8 +18,7 @@ void postJson(const json& payload) {
 
     CURL* curl = curl_easy_init();
     if (!curl)
-        throw std::runtime_error("Failed to init curl");
-
+        RUNTIME_ERROR("Failed to init curl");
         
     struct curl_slist* headers = nullptr;
     
@@ -41,5 +40,5 @@ void postJson(const json& payload) {
     curl_easy_cleanup(curl);
 
     if (res != CURLE_OK)
-        throw std::runtime_error(curl_easy_strerror(res));
+        RUNTIME_ERROR(curl_easy_strerror(res));
 }

@@ -1,14 +1,11 @@
 #pragma once
 
 #include <iostream>
-#include <nlohmann/json.hpp>
 
 #include "macro/logger.hpp"
+
 #include "../Instrument.hpp"
 #include "namespace/equity.hpp"
-
-using json = nlohmann::json;
-
 class Equity : public Instrument {
 private:
 public:

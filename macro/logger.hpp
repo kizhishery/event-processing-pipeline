@@ -1,11 +1,11 @@
-#ifndef LOGGER_HPP
-#define LOGGER_HPP
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <ctime>
 #include <chrono>
-#include <nlohmann/json.hpp>  // nlohmann::json
+#include <nlohmann/json.hpp>  
+// nlohmann::json
 
 namespace logger_utils {
     inline std::string currentTime() {
@@ -41,4 +41,8 @@ namespace logger_utils {
                   << (val).dump(__VA_ARGS__) << std::endl; \
     } while (0)
 
-#endif // LOGGER_HPP
+#define RUNTIME_ERROR(msg) \
+    do { \
+        throw std::runtime_error(msg); \
+    } while (0)
+

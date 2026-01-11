@@ -4,9 +4,10 @@
 #include <memory>
 #include <nlohmann/json.hpp>
 
+#include "struct.hpp"
+
 #include "Enums/Enums.hpp"
 #include "macro/logger.hpp"
-#include "ExchangeType/ExchangeType.hpp"
 #include "Instrument/InstrumentFactory.hpp"
 
 using json = nlohmann::json;
@@ -17,7 +18,7 @@ private:
     Exchange exchangeEnum = Exchange::UNKNOWN;
 
     // 🔥 entire try-catch lives here
-    static std::pair<Exchange, Type> parseJson(const json& jsonStr);
+    static Pair parseJson(const json& jsonStr);
 
 public:
     explicit FilterClass(const json& Json);

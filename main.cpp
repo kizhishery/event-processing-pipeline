@@ -16,7 +16,7 @@ int main() {
     try {
         std::ifstream in("../data.json");
         if (!in)
-            throw std::runtime_error("Failed to open ../data.json");
+            RUNTIME_ERROR("Failed to open ../data.json");
 
         json root;
         in >> root;
@@ -29,8 +29,10 @@ int main() {
 
         // Outer array
         for (const auto& wrapper : root) {
-            if (!wrapper.contains("Records") || !wrapper["Records"].is_array())
+            if (!wrapper.contains("Records") || !wrapper["Records"].is_array()){
+                LOG("Record not found!");
                 continue;
+            }
 
             // Records array
             for (const auto& record : wrapper["Records"]) {

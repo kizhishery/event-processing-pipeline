@@ -105,9 +105,10 @@ int Option::toInt(const json& j, const char* key) {
 // ---------- ExchangeOne option chain ----------
 json Option::processOptionExchangeOne(const json& jsonData) {
     json result = json::array();
+    // LOG_JSON(result,4);
 
     if (!jsonData.contains("data") || !jsonData["data"].is_array()) {
-        LOG_ERR("data val arg is missing");
+        RUNTIME_ERROR("data val arg is missing");
         return result;
     }
     
@@ -116,13 +117,13 @@ json Option::processOptionExchangeOne(const json& jsonData) {
     for (const auto& block : jsonData["data"]) {
         
         if (!block.contains("records")) {
-            LOG_ERR("record arg val is missing");
+            RUNTIME_ERROR("record arg val is missing");
             continue;
         }
         const auto& records = block["records"];
         
         if (!records.contains("data")) {
-            LOG_ERR("data arg val is missing");
+            RUNTIME_ERROR("data arg val is missing");
             continue;
         }
         
@@ -156,7 +157,7 @@ json Option::processOptionExchangeTwo(const json& jsonData) {
     json result = json::array();
     
     if (!jsonData.contains("data") || !jsonData["data"].is_array()) {
-        LOG_ERR("data val arg is missing");
+        RUNTIME_ERROR("data val arg is missing");
         return result;
     }
     
@@ -165,7 +166,7 @@ json Option::processOptionExchangeTwo(const json& jsonData) {
     for (const auto& block : jsonData["data"]) {
         
         if (!block.contains("Table")) {
-            LOG_ERR("Table val arg is missing");
+            RUNTIME_ERROR("Table val arg is missing");
             continue;
         }
         const auto& table = block["Table"];
