@@ -1,8 +1,13 @@
-add_library(utils STATIC
+add_library(utils
     gzip_json.cpp
 )
 
 target_include_directories(utils
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_SOURCE_DIR}
+)
+
+target_link_libraries(utils
+    PUBLIC
+        ZLIB::ZLIB
 )

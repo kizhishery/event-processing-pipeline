@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <nlohmann/json.hpp>
 
-#include "macro/logger.hpp" 
+#include "../macro/logger.hpp" 
 
 
 using json = nlohmann::json;

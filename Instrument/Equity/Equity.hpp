@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-#include "macro/logger.hpp"
-
 #include "../Instrument.hpp"
-#include "namespace/equity.hpp"
+#include "../../macro/logger.hpp"
+#include "../../namespace/equity.hpp"
+
 class Equity : public Instrument {
 private:
 public:

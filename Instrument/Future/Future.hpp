@@ -3,9 +3,9 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-#include "macro/logger.hpp"
 #include "../Instrument.hpp"
-#include "namespace/future.hpp"
+#include "../../macro/logger.hpp"
+#include "../../namespace/future.hpp"
 
 using json = nlohmann::json;
 

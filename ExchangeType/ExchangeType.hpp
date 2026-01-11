@@ -2,9 +2,9 @@
 #include <string>
 #include <cstdlib>
 
-#include "Enums/Enums.hpp"
-#include "macro/logger.hpp"
-#include "namespace/data.hpp"
+#include "../Enums/Enums.hpp"
+#include "../macro/logger.hpp"
+#include "../namespace/data.hpp"
 
 class ExchangeType {
 public:

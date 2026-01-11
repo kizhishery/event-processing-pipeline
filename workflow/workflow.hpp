@@ -3,9 +3,9 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-#include "macro/logger.hpp"
-#include "process/process.hpp"
-#include "postJson/postJson.hpp"
+#include "../macro/logger.hpp"
+#include "../process/process.hpp"
+#include "../postJson/postJson.hpp"
 
 using json = nlohmann::json;
 

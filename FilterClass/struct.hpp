@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "ExchangeType/ExchangeType.hpp"
+#include "../ExchangeType/ExchangeType.hpp"
 
 struct Pair {
     Exchange exchange;
