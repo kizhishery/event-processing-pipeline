@@ -4,6 +4,7 @@
 
 #include "../Instrument.hpp"
 #include "../../macro/logger.hpp"
+#include "../../namespace/data.hpp"
 #include "../../namespace/equity.hpp"
 
 class Equity : public Instrument {
@@ -13,7 +14,7 @@ public:
     
     json process(const json& jsonData) override;
     
-    static json processEquityExchangeOne(const json& jsonData);
-    static json processEquityExchangeTwo(const json& jsonData);
+    static json processEquityExchangeOne(const json& jsonData,const std::string& exchange);
+    static json processEquityExchangeTwo(const json& jsonData,const std::string& exchange);
 };
 

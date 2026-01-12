@@ -3,10 +3,10 @@
 json Option::process(const json& jsonData) {
     switch (exchange) {
         case Exchange::EXCHANGE_1:
-            return processOptionExchangeOne(jsonData);
+            return processOptionExchangeOne(jsonData,DATA::EXCHANGE_1);
 
         case Exchange::EXCHANGE_2:
-            return processOptionExchangeTwo(jsonData);
+            return processOptionExchangeTwo(jsonData,DATA::EXCHANGE_2);
 
         default:
             return json{};
@@ -52,6 +52,7 @@ json Option::processExchangeTwo(const json& side, bool isCE) {
 
 // ---------- Common option builder ----------
 json Option::buildOption(
+    const std::string exchange,
     int strike,
     double underlyingValue,
     const std::string& timestamp,
@@ -65,7 +66,9 @@ json Option::buildOption(
     option[OPTION::CE]  = ce;
     option[OPTION::PE]  = pe;
     option[OPTION::KEY] = std::to_string(strike) + " | " + expiry;
+    option[OPTION::TYPE] = DATA::OPTION;
     option[OPTION::EXPIRY] = expiry;
+    option[OPTION::EXCHANGE] = exchange;
     option[OPTION::TIMESTAMP]  = timestamp;
     option[OPTION::UNDERLYING]  = underlying;
     option[OPTION::STRIKE_PRICE] = strike;
@@ -103,7 +106,7 @@ int Option::toInt(const json& j, const char* key) {
 }
 
 // ---------- ExchangeOne option chain ----------
-json Option::processOptionExchangeOne(const json& jsonData) {
+json Option::processOptionExchangeOne(const json& jsonData,const std::string& exchange) {
     json result = json::array();
     // LOG_JSON(result,4);
 
@@ -137,6 +140,7 @@ json Option::processOptionExchangeOne(const json& jsonData) {
             
             result.push_back(
                 buildOption(
+                    exchange,
                     strike,
                     ulv,
                     ts,
@@ -153,7 +157,7 @@ json Option::processOptionExchangeOne(const json& jsonData) {
 }
 
 // ---------- ExchangeTwo option chain ----------
-json Option::processOptionExchangeTwo(const json& jsonData) {
+json Option::processOptionExchangeTwo(const json& jsonData,const std::string& exchange) {
     json result = json::array();
     
     if (!jsonData.contains("data") || !jsonData["data"].is_array()) {
@@ -187,6 +191,7 @@ json Option::processOptionExchangeTwo(const json& jsonData) {
             
             result.push_back(
                 buildOption(
+                    exchange,
                     strike,
                     ulv,
                     ts,

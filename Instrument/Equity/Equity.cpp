@@ -4,17 +4,17 @@ json Equity::process(const json& jsonData) {
     
     switch (exchange) {
         case Exchange::EXCHANGE_1:
-            return processEquityExchangeOne(jsonData);
+            return processEquityExchangeOne(jsonData,DATA::EXCHANGE_1);
 
         case Exchange::EXCHANGE_2:
-            return processEquityExchangeTwo(jsonData);
+            return processEquityExchangeTwo(jsonData,DATA::EXCHANGE_2);
 
         default:
             return json{};
     }
 }
 
-json Equity::processEquityExchangeOne(const json& jsonData) {
+json Equity::processEquityExchangeOne(const json& jsonData,const std::string& exchange) {
     json result;
 
     const std::string timeStr = jsonData.value("time", "");
@@ -32,7 +32,9 @@ json Equity::processEquityExchangeOne(const json& jsonData) {
         continue;
         
         result[EQUITY::KEY]                 = val.value("symbol", "") + " | " + timeStr.substr(0,timeStr.find("T"));
+        result[EQUITY::TYPE]                = DATA::EQUITY;
         result[EQUITY::VOLUME]              = val.value("totalTradedVolume", 0);
+        result[EQUITY::EXCHANGE]            = exchange;
         result[EQUITY::TIMESTAMP]           = timeStr;
         result[EQUITY::UNDERLYING]          = val.value("symbol", "");
         result[EQUITY::PREVIOUS_CLOSE]      = val.value("previousClose", 0.0);
@@ -44,7 +46,7 @@ json Equity::processEquityExchangeOne(const json& jsonData) {
     return result;
 }
 
-json Equity::processEquityExchangeTwo(const json& jsonData) {
+json Equity::processEquityExchangeTwo(const json& jsonData,const std::string& exchange) {
     json result;
     
     const std::string timeStr = jsonData.value("time", "");
@@ -53,16 +55,18 @@ json Equity::processEquityExchangeTwo(const json& jsonData) {
         RUNTIME_ERROR("data val is missing");
         return result;
     }
-
+    
     const auto& dataArray = jsonData["data"][0];
     const auto& data      = dataArray["data"];
-
+    
     for (const auto& val : data) {
-		if(val.value("priority",0) != 1)
-			continue;
-
+        if(val.value("priority",0) != 1)
+        continue;
+        
         result[EQUITY::KEY]                 = val.value("symbol", "") + " | " + timeStr.substr(0,timeStr.find("T"));
+        result[EQUITY::TYPE]                = DATA::EQUITY;
         result[EQUITY::VOLUME]              = val.value("totalTradedVolume", 0);
+        result[EQUITY::EXCHANGE]            = exchange;
         result[EQUITY::TIMESTAMP]           = timeStr;
         result[EQUITY::UNDERLYING]          = val.value("symbol", "");
         result[EQUITY::PREVIOUS_CLOSE]      = val.value("previousClose", 0.0);

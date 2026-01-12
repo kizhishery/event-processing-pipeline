@@ -5,6 +5,7 @@
 
 #include "../Instrument.hpp"
 #include "../../macro/logger.hpp"
+#include "../../namespace/data.hpp"
 #include "../../namespace/future.hpp"
 
 using json = nlohmann::json;
@@ -15,7 +16,7 @@ public:
 
     json process(const json& jsonData) override;
 
-    static json processFutureExchangeOne(const json& jsonData);
-    static json processFutureExchangeTwo(const json& jsonData);
+    static json processFutureExchangeOne(const json& jsonData,const std::string& exchange);
+    static json processFutureExchangeTwo(const json& jsonData,const std::string& exchange);
 };
 

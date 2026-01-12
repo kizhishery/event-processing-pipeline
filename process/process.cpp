@@ -12,7 +12,7 @@ json process(const json& record){
         
         json sqsBody = json::parse(record["body"].get<std::string>());
         
-        // SNS Message 
+        // Sqs Message 
         if (!sqsBody.contains("Message") || !sqsBody["Message"].is_string()) {
             RUNTIME_ERROR("record missing Message parameter");
             return json::object();

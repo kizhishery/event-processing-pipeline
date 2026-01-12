@@ -1,5 +1,8 @@
 #pragma once
 namespace EQUITY {
+    static constexpr const char* TYPE = "type";
+    static constexpr const char* EXCHANGE = "exchange";
+
     static constexpr const char* KEY 				= "key";
     static constexpr const char* VOLUME 			= "vol";
     static constexpr const char* TIMESTAMP 			= "ts";

@@ -1,5 +1,9 @@
 #pragma once
 namespace OPTION {
+    // for filtering
+    static constexpr const char* TYPE = "type";
+    static constexpr const char* EXCHANGE = "exchange";
+
 	static constexpr const char* CE = "ce";
     static constexpr const char* PE = "pe";
     static constexpr const char* KEY = "key";

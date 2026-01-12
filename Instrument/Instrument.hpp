@@ -9,7 +9,7 @@ protected:
     Exchange exchange;
 
 public:
-    explicit Instrument(Exchange ex) : exchange(ex) {}
+    explicit Instrument(Exchange exchange) : exchange(exchange) {}
     virtual ~Instrument() = default;
     
     virtual json process(const json& jsonData) = 0;

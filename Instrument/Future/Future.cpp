@@ -3,10 +3,10 @@
 json Future::process(const json& jsonData) {
     switch (exchange) {
         case Exchange::EXCHANGE_1:
-            return processFutureExchangeOne(jsonData);
+            return processFutureExchangeOne(jsonData,DATA::EXCHANGE_1);
 
         case Exchange::EXCHANGE_2:
-            return processFutureExchangeTwo(jsonData);
+            return processFutureExchangeTwo(jsonData,DATA::EXCHANGE_2);
 
         default:
             return json{};
@@ -14,7 +14,7 @@ json Future::process(const json& jsonData) {
 }
 
 
-json Future::processFutureExchangeOne(const json& jsonData) {
+json Future::processFutureExchangeOne(const json& jsonData,const std::string& exchange) {
     json result;
     
     const std::string timeStr = jsonData.value("time", "");
@@ -29,8 +29,10 @@ json Future::processFutureExchangeOne(const json& jsonData) {
     
     for (const auto& val : data) {
         result[FUTURE::KEY]                 = val.value("underlying", "") + " | " + val.value("expiryDate", "");
+        result[FUTURE::TYPE]                = DATA::FUTURE;
         result[FUTURE::VOLUME]              = val.value("noOfTrades", 0);
         result[FUTURE::EXPIRY]              = val.value("expiryDate", "");
+        result[FUTURE::EXCHANGE]            = exchange;
         result[FUTURE::TIMESTAMP]           = timeStr;
         result[FUTURE::UNDERLYING]          = val.value("underlying", "");
         result[FUTURE::OPEN_INTEREST]       = val.value("openInterest", 0);
@@ -44,7 +46,7 @@ json Future::processFutureExchangeOne(const json& jsonData) {
     return result;
 }
 
-json Future::processFutureExchangeTwo(const json& jsonData) {
+json Future::processFutureExchangeTwo(const json& jsonData,const std::string& exchange) {
     json result;
     
     const std::string timeStr = jsonData.value("time", "");
@@ -59,8 +61,10 @@ json Future::processFutureExchangeTwo(const json& jsonData) {
         val.value("SERIES_CODE", "").substr(0, 6);
         
         result[FUTURE::KEY]                 = ul + " | " + val.value("EXPIRY_OF_CONTRACT", "");
+        result[FUTURE::TYPE]                = DATA::FUTURE;
         result[FUTURE::EXPIRY]              = val.value("EXPIRY_OF_CONTRACT", "");
         result[FUTURE::VOLUME]              = val.value("NO_OF_CONTRACTS", 0);
+        result[FUTURE::EXCHANGE]            = exchange;
         result[FUTURE::TIMESTAMP]           = timeStr;
         result[FUTURE::UNDERLYING]          = ul;
         result[FUTURE::OPEN_INTEREST]       = val.value("OPEN_INTEREST", 0);

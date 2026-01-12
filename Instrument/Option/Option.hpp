@@ -7,6 +7,7 @@
 
 #include "../Instrument.hpp"
 #include "../../macro/logger.hpp"
+#include "../../namespace/data.hpp"
 #include "../../namespace/option.hpp"
 
 using json = nlohmann::json;
@@ -21,8 +22,8 @@ public:
     static json processExchangeTwo(const json& side, bool isCE);
 
     // ---------- Option chain ----------
-    static json processOptionExchangeOne(const json& jsonData);
-    static json processOptionExchangeTwo(const json& jsonData);
+    static json processOptionExchangeOne(const json& jsonData,const std::string& exchange);
+    static json processOptionExchangeTwo(const json& jsonData,const std::string& exchange);
 
     // ---------- Helpers ----------
     static int    toInt(const json& j, const char* key);
@@ -31,6 +32,7 @@ public:
 
     // ---------- Option builder ----------
     static json buildOption(
+        const std::string exchange,
         int strike,
         double underlyingValue,
         const std::string& timestamp,
