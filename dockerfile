@@ -1,41 +1,40 @@
-# ---------- Stage 1: Build ----------
-FROM ubuntu:22.04 AS builder
+# ---- Stage 1: Build ----
+FROM alpine:edge AS builder
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update && apt-get install -y \
-    build-essential \
+# Install build tools and dependencies
+RUN apk add --no-cache \
+    build-base \
     cmake \
-    git \
-    libcurl4-openssl-dev \
-    zlib1g-dev \
-    nlohmann-json3-dev \
-    && rm -rf /var/lib/apt/lists/*
+    zlib-dev \
+    curl-dev
 
+# Set working directory
 WORKDIR /app
+
+# Copy all source files
 COPY . .
 
-RUN cmake -S . -B build \
-    -DCMAKE_BUILD_TYPE=Release \
-    && cmake --build build -j$(nproc)
+# Create build directory
+RUN mkdir build
+WORKDIR /app/build
 
-# ---------- Stage 2: Runtime ----------
-FROM ubuntu:22.04
+# Configure CMake and build the project
+RUN cmake .. -DCMAKE_BUILD_TYPE=Release \
+    && cmake --build . -- -j$(nproc)
 
-ENV DEBIAN_FRONTEND=noninteractive
+# ---- Stage 2: Runtime ----
+FROM alpine:edge AS runtime
 
-# -------- Runtime Environment Variables --------
-ENV URL=""
-ENV KEY=""
-ENV EXCHANGE_1=""
-ENV EXCHANGE_2=""
+# Install only runtime dependencies
+RUN apk add --no-cache \
+    zlib \
+    curl
 
-RUN apt-get update && apt-get install -y \
-    libcurl4 \
-    zlib1g \
-    && rm -rf /var/lib/apt/lists/*
-
+# Set working directory
 WORKDIR /app
+
+# Copy the executable from the builder stage
 COPY --from=builder /app/build/main .
 
-CMD ["./main"]
+# Make executable entrypoint
+ENTRYPOINT ["./main"]
