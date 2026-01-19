@@ -6,10 +6,10 @@ on:
 
 env:
   AWS_REGION: ap-south-1
-  ECR_REPOSITORY: intradayScrapePipeline2
-  ECS_CLUSTER: intradayScrapePipeline2
-  ECS_SERVICE: intradayScrapePipeline2
-  CONTAINER_NAME: intradayScrapePipeline2
+  ECR_REPOSITORY: intradayscrapepipeline2
+  ECS_CLUSTER: intradayscrapepipeline2
+  ECS_SERVICE: intradayscrapepipeline2
+  CONTAINER_NAME: intradayscrapepipeline2
 
 jobs:
   deploy:
