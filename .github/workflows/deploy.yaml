@@ -10,7 +10,6 @@ env:
   ECS_CLUSTER: intradayscrapepipeline2
   ECS_SERVICE: intradayscrapepipeline2
   CONTAINER_NAME: intradayscrapepipeline2
-  TASK_DEF_FAMILY: intradayscrapepipeline2
 
 jobs:
   deploy:
@@ -43,70 +42,31 @@ jobs:
         IMAGE_SHA: ${{ github.sha }}
       run: |
         set -eux
+
         IMAGE_SHA_TAG=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_SHA
         IMAGE_LATEST_TAG=$ECR_REGISTRY/$ECR_REPOSITORY:latest
 
+        echo "Building image:"
+        echo " - $IMAGE_SHA_TAG"
+        echo " - $IMAGE_LATEST_TAG"
+
+        # Build once, tag twice
         docker build --progress=plain \
           -t $IMAGE_SHA_TAG \
           -t $IMAGE_LATEST_TAG .
 
+        # Push both tags
         docker push $IMAGE_SHA_TAG
         docker push $IMAGE_LATEST_TAG
 
+        # ECS will deploy the immutable SHA tag
         echo "IMAGE_URI=$IMAGE_SHA_TAG" >> $GITHUB_ENV
-
-    # ---------- CHECK IF TASK DEFINITION EXISTS ----------
-    - name: Check if ECS task definition exists
-      id: check-task
-      run: |
-        set -eux
-        TASK_DEF=$(aws ecs describe-task-definition \
-          --task-definition ${{ env.TASK_DEF_FAMILY }} 2>/dev/null || echo "")
-        if [ -z "$TASK_DEF" ]; then
-          echo "TASK_DEF_EXISTS=false" >> $GITHUB_ENV
-        else
-          echo "TASK_DEF_EXISTS=true" >> $GITHUB_ENV
-        fi
-
-    # ---------- CREATE TASK DEFINITION IF MISSING ----------
-    - name: Create ECS task definition if missing
-      if: env.TASK_DEF_EXISTS == 'false'
-      run: |
-        set -eux
-        echo "Task definition not found. Creating..."
-        cat > task-definition.json <<EOF
-{
-  "family": "${{ env.TASK_DEF_FAMILY }}",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "256",
-  "memory": "512",
-  "executionRoleArn": "arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecsTaskExecutionRole",
-  "containerDefinitions": [
-    {
-      "name": "${{ env.CONTAINER_NAME }}",
-      "image": "${{ env.IMAGE_URI }}",
-      "essential": true,
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/${{ env.ECS_SERVICE }}",
-          "awslogs-region": "${{ env.AWS_REGION }}",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
-    }
-  ]
-}
-EOF
-        aws ecs register-task-definition \
-          --cli-input-json file://task-definition.json
 
     # ---------- FETCH TASK DEFINITION ----------
     - name: Download ECS task definition
       run: |
         aws ecs describe-task-definition \
-          --task-definition ${{ env.TASK_DEF_FAMILY }} \
+          --task-definition $ECS_SERVICE \
           --query taskDefinition \
           > task-definition.json
 
