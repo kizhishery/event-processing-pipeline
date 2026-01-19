@@ -1,9 +1,9 @@
-#include "environment/lambda.hpp"        // Your lambda() handler
-#include "aws/lambda-runtime/runtime.h"  // AWS Lambda C++ runtime
+#include <aws/lambda-runtime/runtime.h>
+
+#include "environment/lambda.hpp"
 
 int main()
 {
-    // Run AWS Lambda runtime with your lambda() function
-    aws::lambda_runtime::run_handler(lambda);
+    aws::lambda_runtime::run_handler(lambda_handler);
     return 0;
 }

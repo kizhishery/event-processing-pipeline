@@ -1,7 +1,9 @@
-# ---- Builder ----
+# =======================
+# Builder Stage
+# =======================
 FROM alpine:edge AS builder
 
-# Install build tools
+# Install build tools and dependencies
 RUN apk add --no-cache \
     build-base \
     cmake \
@@ -10,29 +12,40 @@ RUN apk add --no-cache \
     curl-dev \
     bash
 
-# ---- Build AWS Lambda C++ Runtime ----
+# -----------------------
+# Build AWS Lambda C++ Runtime
+# -----------------------
 WORKDIR /opt
+
 RUN git clone https://github.com/awslabs/aws-lambda-cpp.git
+
 WORKDIR /opt/aws-lambda-cpp/build
-RUN cmake .. -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release \
+
+RUN cmake .. \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_SHARED_LIBS=OFF \
     && make -j$(nproc) \
     && make install
 
-# ---- Build your Lambda executable ----
+# -----------------------
+# Build Your Application
+# -----------------------
 WORKDIR /app
 COPY . .
 
 RUN mkdir -p build
 WORKDIR /app/build
 
-# Build the main binary
-RUN cmake .. -DCMAKE_BUILD_TYPE=Release -DAWS_LAMBDA_CPP_DIR=/usr/local \
+RUN cmake .. \
+      -DCMAKE_BUILD_TYPE=Release \
     && cmake --build . --target main -- -j$(nproc)
 
-# ---- Runtime ----
+# =======================
+# Runtime Stage
+# =======================
 FROM alpine:edge
 
-# Install minimal runtime dependencies
+# Minimal runtime dependencies
 RUN apk add --no-cache \
     libstdc++ \
     libgcc \
@@ -41,7 +54,7 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-# Copy Lambda binary from builder
+# Copy compiled Lambda binary
 COPY --from=builder /app/build/main /app/main
 RUN chmod +x /app/main
 
