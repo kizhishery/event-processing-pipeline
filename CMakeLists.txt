@@ -16,9 +16,9 @@ add_subdirectory(utils)
 add_subdirectory(process)
 add_subdirectory(postJson)
 add_subdirectory(workflow)
-add_subdirectory(filterclass)
-add_subdirectory(exchangetype)
-add_subdirectory(instrument)
+add_subdirectory(FilterClass)
+add_subdirectory(ExchangeType)
+add_subdirectory(Instrument)
 
 # ---- Executable ----
 add_executable(main main.cpp)
