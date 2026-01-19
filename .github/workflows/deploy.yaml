@@ -16,8 +16,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # ---------- CHECKOUT ----------
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # ---------- VALIDATE REQUIRED DIRECTORIES ----------
+    - name: Validate build directories exist
+      run: |
+        echo "Listing repo root:"
+        ls -la
+        echo ""
+        echo "Checking required directories..."
+        for d in filterclass exchangetype instrument; do
+          if [ ! -d "$d" ]; then
+            echo "❌ Missing directory: $d"
+            exit 1
+          fi
+          echo "✅ Found: $d"
+        done
 
     # ---------- AWS LOGIN ----------
     - name: Configure AWS credentials
@@ -38,7 +56,9 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        set -eux
+        docker build --progress=plain \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
 
