@@ -28,7 +28,7 @@ RUN cmake .. \
     && make install
 
 # -----------------------
-# Build Your Application
+# Build Application
 # -----------------------
 WORKDIR /app
 COPY . .

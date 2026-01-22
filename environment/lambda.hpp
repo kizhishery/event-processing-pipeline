@@ -13,7 +13,7 @@ inline aws::lambda_runtime::invocation_response lambda_handler(const aws::lambda
 
     try {
         nlohmann::json root = nlohmann::json::parse(request.payload);
-        std::cout<<root.dump(4)<<'\n';
+        // std::cout<<root.dump(4)<<'\n';
         processWorkFlow(root);
 
         return aws::lambda_runtime::invocation_response::success(
